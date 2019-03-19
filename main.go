@@ -5,11 +5,15 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"google.golang.org/appengine"
 )
 
 func main() {
 	e := echo.New()
+
+	e.Use(middleware.Logger())
+
 	router.Routes(e)
 	http.Handle("/", e)
 	appengine.Main()

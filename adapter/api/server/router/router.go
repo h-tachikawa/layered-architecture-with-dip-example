@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"os"
 
+	w "go.mercari.io/datastore"
+	"google.golang.org/appengine"
+
 	"go.mercari.io/datastore"
 
 	"go.mercari.io/datastore/clouddatastore"
@@ -20,20 +23,31 @@ func Routes(e *echo.Echo) {
 	g.GET("/liver", func(ctx echo.Context) error {
 		return reg.VirtualLiverHandler.List(ctx)
 	})
-	// TODO: デバッグ用に作ったので後でちゃんとレイヤードアーキテクチャ+DIPで作り直す
+	// TODO: デバッグ用データ投入のために作ったので後でちゃんとレイヤードアーキテクチャ+DIPで作り直す
 	g.POST("/liver", func(ectx echo.Context) error {
 		ctx := ectx.Request().Context()
-		projectId := os.Getenv("DATASTORE_DATASET")
-		opts := datastore.WithProjectID(projectId)
-		client, err := clouddatastore.FromContext(ctx, opts)
+
+		var client w.Client
+		var err error
+
+		if appengine.IsDevAppServer() {
+			projectId := os.Getenv("DATASTORE_DATASET")
+			opts := datastore.WithProjectID(projectId)
+			client, err = clouddatastore.FromContext(ctx, opts)
+		} else {
+			projectId := appengine.AppID(ctx)
+			opts := datastore.WithProjectID(projectId)
+			client, err = clouddatastore.FromContext(ctx, opts)
+		}
 
 		if err != nil {
 			panic(err)
 		}
 		entity := &model.VirtualLiver{
-			Name:     "椎名唯華",
-			NickName: "しぃしぃ",
+			Name:     "御伽原江良",
+			NickName: "頭舞踏会",
 		}
+
 		key := client.IncompleteKey("virtual-liver", nil)
 		_, err = client.Put(ctx, key, entity)
 		if err != nil {
