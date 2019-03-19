@@ -8,6 +8,7 @@ import (
 
 type VirtualLiverUseCase interface {
 	List(context.Context) ([]*model.VirtualLiver, error)
+	Create(context.Context, *model.VirtualLiver) (*model.VirtualLiver, error)
 }
 
 type virtualLiverUseCase struct {
@@ -22,4 +23,8 @@ func NewVirtualLiverUseCase(r repository.VirtualLiverRepository) VirtualLiverUse
 
 func (u *virtualLiverUseCase) List(ctx context.Context) ([]*model.VirtualLiver, error) {
 	return u.VirtualLiverRepository.List(ctx)
+}
+
+func (u *virtualLiverUseCase) Create(ctx context.Context, liver *model.VirtualLiver) (*model.VirtualLiver, error) {
+	return u.VirtualLiverRepository.Create(ctx, liver)
 }

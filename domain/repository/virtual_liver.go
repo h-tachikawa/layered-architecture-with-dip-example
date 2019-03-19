@@ -7,4 +7,5 @@ import (
 
 type VirtualLiverRepository interface {
 	List(ctx context.Context) ([]*model.VirtualLiver, error)
+	Create(ctx context.Context, liver *model.VirtualLiver) (*model.VirtualLiver, error)
 }

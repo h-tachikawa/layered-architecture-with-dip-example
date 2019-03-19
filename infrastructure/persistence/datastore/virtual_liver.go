@@ -19,6 +19,30 @@ const (
 
 type virtualLiverRepository struct{}
 
+func (v *virtualLiverRepository) Create(ctx context.Context, liver *model.VirtualLiver) (*model.VirtualLiver, error) {
+	var client w.Client
+	var err error
+
+	if appengine.IsDevAppServer() {
+		projectId := os.Getenv("DATASTORE_DATASET")
+		opts := datastore.WithProjectID(projectId)
+		client, err = clouddatastore.FromContext(ctx, opts)
+	} else {
+		projectId := appengine.AppID(ctx)
+		opts := datastore.WithProjectID(projectId)
+		client, err = clouddatastore.FromContext(ctx, opts)
+	}
+
+	if err != nil {
+		panic(err)
+	}
+
+	key := client.IncompleteKey("virtual-liver", nil)
+	_, err = client.Put(ctx, key, liver)
+
+	return liver, nil
+}
+
 func NewVirtualLiverRepository() repository.VirtualLiverRepository {
 	return &virtualLiverRepository{}
 }
@@ -29,7 +53,6 @@ func (v *virtualLiverRepository) List(ctx context.Context) ([]*model.VirtualLive
 	var client w.Client
 	var err error
 
-	// TODO: 以下の処理は共通化するべきなので切り出してアプリ初期化時にclientを生成して引き回すよう修正する。
 	if appengine.IsDevAppServer() {
 		projectId := os.Getenv("DATASTORE_DATASET")
 		opts := datastore.WithProjectID(projectId)
