@@ -4,8 +4,6 @@ import (
 	"layered-architecture-with-dip-example/usecase"
 	"net/http"
 
-	"google.golang.org/appengine"
-
 	"github.com/labstack/echo"
 )
 
@@ -22,7 +20,7 @@ func NewVirtualLiverHandler(u usecase.VirtualLiverUseCase) VirtualLiverHandler {
 }
 
 func (v *virtualLiverHandler) List(ectx echo.Context) error {
-	ctx := appengine.NewContext(ectx.Request())
+	ctx := ectx.Request().Context()
 
 	vl, err := v.u.List(ctx)
 

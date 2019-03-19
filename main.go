@@ -13,4 +13,5 @@ func main() {
 	router.Routes(e)
 	http.Handle("/", e)
 	appengine.Main()
+	//e.Logger.Fatal(e.Start(":8080"))
 }
