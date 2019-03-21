@@ -1,7 +1,7 @@
 package main
 
 import (
-	"layered-architecture-with-dip-example/adapter/api/server/router"
+	"layered-architecture-with-dip-example/interfaces/api/server/router"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -13,6 +13,8 @@ func main() {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
 	router.Routes(e)
 	http.Handle("/", e)

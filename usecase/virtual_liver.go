@@ -7,6 +7,7 @@ import (
 )
 
 type VirtualLiverUseCase interface {
+	Get(context.Context, string) (*model.VirtualLiver, error)
 	List(context.Context) ([]*model.VirtualLiver, error)
 	Create(context.Context, *model.VirtualLiver) (*model.VirtualLiver, error)
 }
@@ -19,6 +20,10 @@ func NewVirtualLiverUseCase(r repository.VirtualLiverRepository) VirtualLiverUse
 	return &virtualLiverUseCase{
 		r,
 	}
+}
+
+func (u *virtualLiverUseCase) Get(ctx context.Context, id string) (*model.VirtualLiver, error) {
+	return u.VirtualLiverRepository.Get(ctx, id)
 }
 
 func (u *virtualLiverUseCase) List(ctx context.Context) ([]*model.VirtualLiver, error) {

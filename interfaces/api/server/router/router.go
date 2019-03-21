@@ -11,6 +11,10 @@ func Routes(e *echo.Echo) {
 	reg := registry.GetRegistry()
 	g := e.Group("/api/v1")
 
+	g.GET("/liver/:id", func(ctx echo.Context) error {
+		return reg.VirtualLiverHandler.Get(ctx)
+	})
+
 	g.GET("/liver", func(ctx echo.Context) error {
 		return reg.VirtualLiverHandler.List(ctx)
 	})

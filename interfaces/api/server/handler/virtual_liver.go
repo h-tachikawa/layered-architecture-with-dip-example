@@ -9,6 +9,7 @@ import (
 )
 
 type VirtualLiverHandler interface {
+	Get(ctx echo.Context) error
 	List(ctx echo.Context) error
 	Create(ctx echo.Context) error
 }
@@ -19,6 +20,19 @@ type virtualLiverHandler struct {
 
 func NewVirtualLiverHandler(u usecase.VirtualLiverUseCase) VirtualLiverHandler {
 	return &virtualLiverHandler{u}
+}
+
+func (v *virtualLiverHandler) Get(ectx echo.Context) error {
+	ctx := ectx.Request().Context()
+
+	id := ectx.Param("id")
+
+	vl, err := v.u.Get(ctx, id)
+
+	if err != nil {
+		return ectx.JSON(http.StatusInternalServerError, err)
+	}
+	return ectx.JSON(http.StatusOK, vl)
 }
 
 func (v *virtualLiverHandler) List(ectx echo.Context) error {
