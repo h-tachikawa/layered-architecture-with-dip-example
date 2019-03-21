@@ -12,6 +12,9 @@ const (
 	virtualLiverKindName = "VirtualLiver"
 )
 
+/**
+TODO: エラーハンドリングをpanicで放棄しているので、ドメイン層に技術的実装に依存しないエラーを定義し、それを返すようにする。
+*/
 type virtualLiverRepository struct{}
 
 func NewVirtualLiverRepository() repository.VirtualLiverRepository {
